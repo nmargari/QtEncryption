@@ -176,43 +176,18 @@ void AESEncryption::EncryptBlock(unsigned char in[], unsigned char out[], unsign
 
     int /*i,*/ j, round;
 
-    //for (i = 0; i < 4; i++)
-    //{
-        //state[i] = state[0] + Nb * i;
-    //}
-        state[0] = state[0];
-        state[1] = state[0] + Nb;
-        state[2] = state[0] + Nb * 2;
-        state[3] = state[0] + Nb * 3;
-
-
-//    for (i = 0; i < 4; i++)
-//    {
-//        for (j = 0; j < Nb; j++)
-//        {
-//            state[i][j] = in[i + 4 * j];
-//        }
-//    }
-
-
-    for (j = 0; j < Nb; j++)
+    for (i = 0; i < 4; i++)
     {
-        state[0][j] = in[4 * j];
+        state[i] = state[0] + Nb * i;
     }
 
-    for (j = 0; j < Nb; j++)
-    {
-        state[1][j] = in[1 + 4 * j];
-    }
 
-    for (j = 0; j < Nb; j++)
+    for (i = 0; i < 4; i++)
     {
-        state[2][j] = in[2 + 4 * j];
-    }
-
-    for (j = 0; j < Nb; j++)
-    {
-        state[3][j] = in[3 + 4 * j];
+        for (j = 0; j < Nb; j++)
+        {
+            state[i][j] = in[i + 4 * j];
+        }
     }
 
     AddRoundKey(state, w);
@@ -229,33 +204,13 @@ void AESEncryption::EncryptBlock(unsigned char in[], unsigned char out[], unsign
     ShiftRows(state);
     AddRoundKey(state, w + Nr * 4 * Nb);
 
-//    for (i = 0; i < 4; i++)
-//    {
-//        for (j = 0; j < Nb; j++)
-//        {
-//            out[i + 4 * j] = state[i][j];
-//        }
-//    }
-
-        for (j = 0; j < Nb; j++)
-        {
-            out[4 * j] = state[0][j];
-        }
-
-        for (j = 0; j < Nb; j++)
-        {
-            out[1 + 4 * j] = state[1][j];
-        }
-
-        for (j = 0; j < Nb; j++)
-        {
-            out[2 + 4 * j] = state[2][j];
-        }
-
-        for (j = 0; j < Nb; j++)
-        {
-            out[3 + 4 * j] = state[3][j];
-        }
+   for (i = 0; i < 4; i++)
+   {
+       for (j = 0; j < Nb; j++)
+       {
+           out[i + 4 * j] = state[i][j];
+       }
+   }
 
     delete [] state[0];
     delete [] state;
@@ -423,50 +378,25 @@ void AESEncryption::MixColumns(unsigned char **state)
 void AESEncryption::AddRoundKey(unsigned char **state, unsigned char *key)
 {
     int j;
-//    int i, j;
+   int i, j;
 
-//    for (i = 0; i < 4; i++)
-//    {
-//        for (j = 0; j < Nb; j++)
-//        {
-//            state[i][j] = state[i][j] ^ key[i + 4 * j];
-//        }
-//    }
-
-    for (j = 0; j < Nb; j++)
-    {
-        state[0][j] = state[0][j] ^ key[4 * j];
-    }
-
-    for (j = 0; j < Nb; j++)
-    {
-        state[1][j] = state[1][j] ^ key[1 + 4 * j];
-    }
-
-    for (j = 0; j < Nb; j++)
-    {
-        state[2][j] = state[2][j] ^ key[2 + 4 * j];
-    }
-
-    for (j = 0; j < Nb; j++)
-    {
-        state[3][j] = state[3][j] ^ key[3 + 4 * j];
-    }
+   for (i = 0; i < 4; i++)
+   {
+       for (j = 0; j < Nb; j++)
+       {
+           state[i][j] = state[i][j] ^ key[i + 4 * j];
+       }
+   }
 }
 
 void AESEncryption::SubWord(unsigned char *a)
 {
-//    int i;
+   int i;
 
-//    for (i = 0; i < 4; i++)
-//    {
-//        a[i] = sbox[a[i] / 16][a[i] % 16];
-//    }
-
-    a[0] = sbox[a[0] / 16][a[0] % 16];
-    a[1] = sbox[a[1] / 16][a[1] % 16];
-    a[2] = sbox[a[2] / 16][a[2] % 16];
-    a[3] = sbox[a[3] / 16][a[3] % 16];
+   for (i = 0; i < 4; i++)
+   {
+       a[i] = sbox[a[i] / 16][a[i] % 16];
+   }
 }
 
 void AESEncryption::RotWord(unsigned char *a)
@@ -480,17 +410,12 @@ void AESEncryption::RotWord(unsigned char *a)
 
 void AESEncryption::XorWords(unsigned char *a, unsigned char *b, unsigned char *c)
 {
-//    int i;
+   int i;
 
-//    for (i = 0; i < 4; i++)
-//    {
-//        c[i] = a[i] ^ b[i];
-//    }
-
-    c[0] = a[0] ^ b[0];
-    c[1] = a[1] ^ b[1];
-    c[2] = a[2] ^ b[2];
-    c[3] = a[3] ^ b[3];
+   for (i = 0; i < 4; i++)
+   {
+       c[i] = a[i] ^ b[i];
+   }
 }
 
 void AESEncryption::Rcon(unsigned char * a, int n)
